@@ -309,15 +309,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 192516298}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.1725101, y: 0.31322002, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 195952451}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &192516300
-CircleCollider2D:
+--- !u!61 &192516300
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -350,8 +350,18 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 0.4
+  m_Offset: {x: -0.008054733, y: -0.016109347}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 1.9826603, y: 1.9343326}
+  m_EdgeRadius: 0
 --- !u!1 &195952446
 GameObject:
   m_ObjectHideFlags: 0
@@ -512,8 +522,8 @@ Transform:
   m_GameObject: {fileID: 195952446}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.96, y: -1.75, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -6.52, y: -2.53, z: 0}
+  m_LocalScale: {x: 0.5000865, y: 0.4842144, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 192516299}
@@ -532,7 +542,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PossessableObject
   moveSpeed: 3
-  jumpForce: 10
+  jumpForce: 0
   maxJumpTime: 0.3
   jumpMultiplier: 1.5
   groundCheck: {fileID: 112921838}
@@ -687,6 +697,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 476221508290746039, guid: 726db7d4991f0dc44a549b3205771590, type: 3}
+      propertyPath: speed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 476221508290746039, guid: 726db7d4991f0dc44a549b3205771590, type: 3}
       propertyPath: jumpForce
       value: 6
       objectReference: {fileID: 0}
@@ -697,6 +711,10 @@ PrefabInstance:
     - target: {fileID: 476221508290746039, guid: 726db7d4991f0dc44a549b3205771590, type: 3}
       propertyPath: jumpMultiplier
       value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 476221508290746039, guid: 726db7d4991f0dc44a549b3205771590, type: 3}
+      propertyPath: possessionDuration
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 476221508290746039, guid: 726db7d4991f0dc44a549b3205771590, type: 3}
       propertyPath: whatIsGround.m_Bits
