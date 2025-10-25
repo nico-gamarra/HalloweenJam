@@ -2,121 +2,67 @@ using UnityEngine;
 
 public class PlayerMov : MonoBehaviour
 {
+    [SerializeField] private PlayerController playerController;
+    
     [Header("Movimiento del fantasma")]
     [SerializeField] private float speed = 5f;
     [SerializeField] private float jumpForce = 12f;
     [SerializeField] private float maxJumpTime = 0.4f;
     [SerializeField] private float jumpMultiplier = 1.5f;
-
-    [SerializeField] private PlayerController playerController;
     
-    private float moveInput;
-    private Rigidbody2D rb;
-    private SpriteRenderer spriteRenderer;
+    private float _moveInput;
+    private Rigidbody2D _rb;
+    private SpriteRenderer _spriteRenderer;
 
-    private float jumpTimeCounter;
-    private bool isJumping;
-    
-    [Header("Detección del suelo")]
-    [SerializeField] private Transform groundCheck;
-    [SerializeField] private float checkRadius = 0.2f;
-    [SerializeField] private LayerMask whatIsGround;
-
-    private bool isGrounded;
-    
-    [Header("Posesión")]
-    public float possessionDuration = 5f;
-    private bool isPossessing = false;
-    private GameObject possessedObject;
-    private RigidbodyType2D originalBodyType;
-
-    public bool IsPossessing => isPossessing; // Propiedad pública de solo lectura
+    private float _jumpTimeCounter;
+    private bool _isJumping;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        originalBodyType = rb.bodyType;
-        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        _rb = GetComponent<Rigidbody2D>();
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 
     void Update()
     {
-        if (isPossessing) return;
-        
-        // --- Detección del suelo ---
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
-        
+        HandleFlip();
+        HandleMovement();
+        HandleJump();
+    }
 
-        // --- Movimiento lateral ---
-        moveInput = Input.GetAxisRaw("Horizontal");
-        rb.linearVelocity = new Vector2(moveInput * speed, rb.linearVelocity.y);
-        
+    private void HandleFlip()
+    {
         // --- Flip ---
-        if (moveInput > 0) spriteRenderer.flipX = false;
-        else if (moveInput < 0) spriteRenderer.flipX = true;
-
-        if (moveInput != 0)
+        if (_moveInput > 0)
         {
+            _spriteRenderer.flipX = false;
             playerController.GetPlayerAnimations().ToggleRunAnimation(true);
         }
         else
         {
-            playerController.GetPlayerAnimations().ToggleRunAnimation(false);
+            if (_moveInput < 0){
+                _spriteRenderer.flipX = true;
+                playerController.GetPlayerAnimations().ToggleRunAnimation(true);
+            }
+            else
+                playerController.GetPlayerAnimations().ToggleRunAnimation(false);
+            
         }
-        //--Salto simple y confiable --
-        HandleJump();
     }
-    
+
+    private void HandleMovement()
+    {
+        // --- Movimiento lateral ---
+        _moveInput = Input.GetAxisRaw("Horizontal");
+        _rb.linearVelocity = new Vector2(_moveInput * speed, _rb.linearVelocity.y);
+    }
+
     private void HandleJump()
     {
         // Si estamos en el suelo y presionamos espacio, saltamos
-        if (isGrounded && Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, jumpForce);
         }
-    }
-
-
-    // --- Detección del suelo ---
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Ground")) isGrounded = true;
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Ground")) isGrounded = false;
-    }
-
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Ground")) isGrounded = true;
-    }
-
-    // --- SISTEMA DE POSESIÓN ---
-    public void PossessObject(GameObject target)
-    {
-        if (isPossessing) return;
-
-        isPossessing = true;
-        possessedObject = target;
-
-        // Desactivar visual y movimiento del fantasma
-        spriteRenderer.enabled = false;
-        rb.linearVelocity = Vector2.zero;
-        rb.bodyType = RigidbodyType2D.Static;
-
-        // Activar el control del objeto poseído
-        possessedObject.GetComponent<PossessableObject>().StartPossession(this, possessionDuration);
-    }
-
-    public void EndPossession(Vector3 newPosition)
-    {
-        // Reactivar al fantasma
-        isPossessing = false;
-        rb.bodyType = originalBodyType;
-        transform.position = newPosition;
-        spriteRenderer.enabled = true;
-        possessedObject = null;
     }
 }
