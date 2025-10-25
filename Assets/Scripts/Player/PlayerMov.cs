@@ -8,6 +8,8 @@ public class PlayerMov : MonoBehaviour
     [SerializeField] private float maxJumpTime = 0.4f;
     [SerializeField] private float jumpMultiplier = 1.5f;
 
+    [SerializeField] private PlayerController playerController;
+    
     private float moveInput;
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
@@ -32,8 +34,8 @@ public class PlayerMov : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
         originalBodyType = rb.bodyType;
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 
     void Update()
@@ -46,10 +48,19 @@ public class PlayerMov : MonoBehaviour
         // --- Movimiento lateral ---
         moveInput = Input.GetAxisRaw("Horizontal");
         rb.linearVelocity = new Vector2(moveInput * speed, rb.linearVelocity.y);
-
+        
         // --- Flip ---
         if (moveInput > 0) spriteRenderer.flipX = false;
         else if (moveInput < 0) spriteRenderer.flipX = true;
+
+        if (moveInput != 0)
+        {
+            playerController.GetPlayerAnimations().ToggleRunAnimation(true);
+        }
+        else
+        {
+            playerController.GetPlayerAnimations().ToggleRunAnimation(false);
+        }
 
         // --- Salto ---
         if (isGrounded && Input.GetKeyDown(KeyCode.Space))
