@@ -21,6 +21,7 @@ public class PossessableObject : MonoBehaviour
     private bool isGrounded;
     private bool isPossessed = false;
     private bool isJumping;
+    private bool playerInRange = false; // <-- NUEVO FLAG
 
     private float jumpTimeCounter;
     private float possessionTimer;
@@ -38,23 +39,31 @@ public class PossessableObject : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Dynamic;
         rb.gravityScale = 3f;
         rb.freezeRotation = true;
+
+        // Asegurar que los triggers se detecten
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Possessable"), false);
     }
 
     void Update()
     {
+        // --- Intentar poseer si el jugador está dentro ---
+        if (!isPossessed && playerInRange && Input.GetKeyDown(KeyCode.E))
+        {
+            TryPossess();
+        }
+
+        // --- Control del objeto cuando está poseído ---
         if (isPossessed && currentGhost != null && currentGhost.IsPossessing)
         {
             possessionTimer -= Time.deltaTime;
             isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
 
-            // --- Movimiento lateral ---
             float moveX = Input.GetAxisRaw("Horizontal");
             rb.linearVelocity = new Vector2(moveX * moveSpeed, rb.linearVelocity.y);
 
             if (moveX > 0) sr.flipX = false;
             else if (moveX < 0) sr.flipX = true;
 
-            // --- Salto ---
             if (isGrounded && Input.GetKeyDown(KeyCode.Space))
             {
                 isJumping = true;
@@ -69,21 +78,36 @@ public class PossessableObject : MonoBehaviour
                     rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce * jumpMultiplier);
                     jumpTimeCounter -= Time.deltaTime;
                 }
-                else
-                    isJumping = false;
+                else isJumping = false;
             }
 
             if (Input.GetKeyUp(KeyCode.Space))
                 isJumping = false;
 
-            // --- Fin del tiempo de posesión ---
             if (possessionTimer <= 0f)
                 StartCoroutine(ReturnControl());
         }
         else if (!isPossessed)
         {
-            // Cuando no está poseído, se detiene lateralmente
             rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+        }
+    }
+
+    // --- Poseer ---
+    private void TryPossess()
+    {
+        if (currentGhost == null)
+        {
+            // Usa la versión moderna recomendada por Unity
+            PlayerMov ghost = Object.FindFirstObjectByType<PlayerMov>();
+            if (ghost != null)
+            {
+                ghost.PossessObject(gameObject);
+            }
+            else
+            {
+                Debug.LogWarning("No se encontró un objeto con el script PlayerMov en la escena.");
+            }
         }
     }
 
@@ -92,13 +116,12 @@ public class PossessableObject : MonoBehaviour
         isPossessed = true;
         currentGhost = ghost;
         possessionTimer = duration;
-
         sr.color = possessedColor;
     }
 
     private IEnumerator ReturnControl()
     {
-        yield return null; // Espera un frame para evitar conflictos de física
+        yield return null;
         EndPossession();
     }
 
@@ -117,14 +140,20 @@ public class PossessableObject : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    // --- Detección confiable del jugador ---
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!isPossessed && collision.CompareTag("Player"))
+        if (collision.CompareTag("Player"))
         {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                collision.GetComponent<PlayerMov>().PossessObject(gameObject);
-            }
+            playerInRange = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            playerInRange = false;
         }
     }
 
