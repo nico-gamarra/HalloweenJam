@@ -5,6 +5,8 @@ public class PlayerMov : MonoBehaviour
     [Header("Movimiento")]
     [SerializeField] private float speed = 5f; // Velocidad de movimiento lateral
     private float moveInput;
+    private Rigidbody2D rb;
+    private SpriteRenderer spriteRenderer;
 
     [Header("Salto")]
     [SerializeField] private float jumpForce = 12f; // Fuerza inicial del salto
@@ -13,12 +15,19 @@ public class PlayerMov : MonoBehaviour
     private float jumpTimeCounter;
     private bool isJumping;
     private bool isGrounded;
+    
+    [Header("Posesión")]
+    public float possessionDuration = 5f;
+    private bool isPossessing = false;
+    private GameObject possessedObject;
 
-    private Rigidbody2D rb;
+    private RigidbodyType2D originalbodyType;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        originalbodyType = rb.bodyType; 
     }
 
     void Update()
@@ -26,6 +35,16 @@ public class PlayerMov : MonoBehaviour
         // --- Movimiento lateral ---
         moveInput = Input.GetAxisRaw("Horizontal");
         rb.linearVelocity = new Vector2(moveInput * speed, rb.linearVelocity.y);
+
+        if (moveInput > 0)
+        {
+            spriteRenderer.flipX = false;
+        }
+        else if (moveInput < 0)
+        {
+            spriteRenderer.flipX = true;
+        }
+            
 
         // --- Salto sensible ---
         if (isGrounded && Input.GetKeyDown(KeyCode.Space))
@@ -77,5 +96,32 @@ public class PlayerMov : MonoBehaviour
         {
             isGrounded = true;
         }
+    }
+    
+    // --- SISTEMA DE POSESIÓN ---
+    public void PossessObject(GameObject target)
+    {
+        if (isPossessing) return;
+
+        isPossessing = true;
+        possessedObject = target;
+
+        // Desactivar visual y movimiento del fantasma
+        spriteRenderer.enabled = false;
+        rb.linearVelocity = Vector2.zero;
+        rb.bodyType = RigidbodyType2D.Static;
+
+        // Activar el control del objeto poseído
+        possessedObject.GetComponent<PossessableObject>().StartPossession(this, possessionDuration);
+    }
+
+    public void EndPossession(Vector3 newPosition)
+    {
+        // Reactivar al fantasma
+        isPossessing = false;
+        rb.bodyType = originalbodyType;
+        transform.position = newPosition;
+        spriteRenderer.enabled = true;
+        possessedObject = null;
     }
 }
