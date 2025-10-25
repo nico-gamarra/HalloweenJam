@@ -127,6 +127,37 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &4400082734866916129
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7297867518692052151}
+  m_Layer: 3
+  m_Name: footPoint
+  m_TagString: Player
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7297867518692052151
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4400082734866916129}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1.1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2934701835240226209}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7862734976295767367
 GameObject:
   m_ObjectHideFlags: 0
@@ -157,11 +188,12 @@ Transform:
   m_GameObject: {fileID: 7862734976295767367}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.815858, y: -3.764234, z: 0}
+  m_LocalPosition: {x: -1.2468, y: -1.38, z: 0}
   m_LocalScale: {x: 0.5778, y: 0.5722, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6795005880806842769}
+  - {fileID: 7297867518692052151}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &2770586140957631702
@@ -179,7 +211,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 3
+  m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -187,9 +219,9 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!70 &7448266613518142199
 CapsuleCollider2D:
@@ -241,10 +273,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMov
   playerController: {fileID: 8824296420519761447}
-  speed: 7
-  jumpForce: 9
-  maxJumpTime: 0.2
-  jumpMultiplier: 1.2
+  speed: 5
+  jumpForce: 7
+  footPoint: {fileID: 7297867518692052151}
+  rayDistance: 0.4
 --- !u!114 &8824296420519761447
 MonoBehaviour:
   m_ObjectHideFlags: 0
