@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class PossessableObject : MonoBehaviour
 {
@@ -12,41 +13,44 @@ public class PossessableObject : MonoBehaviour
     public Transform groundCheck;
     public float checkRadius = 0.2f;
     public LayerMask whatIsGround;
-    private bool isGrounded;
 
+    [Header("Efectos visuales")]
+    public Color possessedColor = Color.cyan;
+
+    private Color originalColor;
+    private bool isGrounded;
     private bool isPossessed = false;
-    private PlayerMov currentGhost;
+    private bool isJumping;
+
+    private float jumpTimeCounter;
     private float possessionTimer;
 
+    private PlayerMov currentGhost;
     private Rigidbody2D rb;
     private SpriteRenderer sr;
-
-    private bool isJumping;
-    private float jumpTimeCounter;
-
-    private RigidbodyType2D originalBodyType;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
-        originalBodyType = rb.bodyType;
+        originalColor = sr.color;
+
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        rb.gravityScale = 3f;
+        rb.freezeRotation = true;
     }
 
     void Update()
     {
-        if (isPossessed)
+        if (isPossessed && currentGhost != null && currentGhost.IsPossessing)
         {
             possessionTimer -= Time.deltaTime;
-
-            // --- Detección de suelo ---
             isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
 
             // --- Movimiento lateral ---
             float moveX = Input.GetAxisRaw("Horizontal");
             rb.linearVelocity = new Vector2(moveX * moveSpeed, rb.linearVelocity.y);
 
-            // Flip sprite según dirección
             if (moveX > 0) sr.flipX = false;
             else if (moveX < 0) sr.flipX = true;
 
@@ -66,26 +70,20 @@ public class PossessableObject : MonoBehaviour
                     jumpTimeCounter -= Time.deltaTime;
                 }
                 else
-                {
                     isJumping = false;
-                }
             }
 
             if (Input.GetKeyUp(KeyCode.Space))
-            {
                 isJumping = false;
-            }
 
             // --- Fin del tiempo de posesión ---
             if (possessionTimer <= 0f)
-            {
-                EndPossession();
-            }
+                StartCoroutine(ReturnControl());
         }
-        else
+        else if (!isPossessed)
         {
-            // Si no está poseído, queda estático (no se cae)
-            rb.bodyType = RigidbodyType2D.Static;
+            // Cuando no está poseído, se detiene lateralmente
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
         }
     }
 
@@ -95,22 +93,28 @@ public class PossessableObject : MonoBehaviour
         currentGhost = ghost;
         possessionTimer = duration;
 
-        rb.bodyType = RigidbodyType2D.Dynamic; // activar físicas mientras se controla
-        rb.gravityScale = 3f; // ajustá la gravedad a gusto
+        sr.color = possessedColor;
+    }
+
+    private IEnumerator ReturnControl()
+    {
+        yield return null; // Espera un frame para evitar conflictos de física
+        EndPossession();
     }
 
     public void EndPossession()
     {
+        if (!isPossessed) return;
+
         isPossessed = false;
         rb.linearVelocity = Vector2.zero;
+        sr.color = originalColor;
 
         if (currentGhost != null)
         {
             currentGhost.EndPossession(transform.position);
             currentGhost = null;
         }
-
-        rb.bodyType = RigidbodyType2D.Static; // el objeto queda quieto sobre el suelo
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -126,7 +130,6 @@ public class PossessableObject : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        // Muestra el área donde detecta el suelo
         if (groundCheck != null)
         {
             Gizmos.color = Color.yellow;
