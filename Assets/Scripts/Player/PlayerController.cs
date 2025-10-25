@@ -3,13 +3,12 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public static event Action OnPlayerDeath;
-
     [SerializeField] private PlayerAnimations playerAnimations;
     
     public void IsDead()
     {
-        OnPlayerDeath?.Invoke();
+        playerAnimations.DeathAnimation();
+        //Que no se pueda mover
     }
     
     public PlayerAnimations GetPlayerAnimations() => playerAnimations;

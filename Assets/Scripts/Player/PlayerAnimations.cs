@@ -8,4 +8,9 @@ public class PlayerAnimations : MonoBehaviour
     {
         animator.SetBool("isRunning", value);
     }
+
+    public void DeathAnimation()
+    {
+        animator.SetTrigger("Death");
+    }
 }
