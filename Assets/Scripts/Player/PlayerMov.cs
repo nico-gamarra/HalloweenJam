@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerMov : MonoBehaviour
@@ -13,18 +14,35 @@ public class PlayerMov : MonoBehaviour
     [SerializeField] private float rayDistance = 0.7f;  // Distancia del raycast
 
     private float _moveInput;
+    private bool _canMove;
     private Rigidbody2D _rb;
     private SpriteRenderer _spriteRenderer;
-    private bool _isGrounded;
+
+    private void Awake()
+    {
+        PlayerController.OnPlayerDeath += DisableMovement;
+        PlayerPossessing.OnPossessStart += DisableMovement;
+        PlayerPossessing.OnPossessEnd += ActivateMovement;
+    }
+
+    private void OnDestroy()
+    {
+        PlayerController.OnPlayerDeath -= DisableMovement;
+        PlayerPossessing.OnPossessStart += DisableMovement;
+        PlayerPossessing.OnPossessEnd -= ActivateMovement;
+    }
 
     void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        _canMove = true;
     }
 
     void Update()
     {
+        if (!_canMove) return;
+            
         HandleMovement();
         HandleFlip();
         if (CheckGround())
@@ -35,6 +53,16 @@ public class PlayerMov : MonoBehaviour
     {
         _moveInput = Input.GetAxisRaw("Horizontal");
         _rb.linearVelocity = new Vector2(_moveInput * speed, _rb.linearVelocity.y);
+    }
+
+    private void DisableMovement()
+    {
+        _canMove = false;
+    }
+
+    private void ActivateMovement(float _)
+    {
+        _canMove = true;
     }
 
     private void HandleFlip()

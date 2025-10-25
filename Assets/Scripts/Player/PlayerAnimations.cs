@@ -13,4 +13,9 @@ public class PlayerAnimations : MonoBehaviour
     {
         animator.SetTrigger("Death");
     }
+
+    public void PossessAnimation()
+    {
+        animator.SetTrigger("Possess");
+    }
 }
