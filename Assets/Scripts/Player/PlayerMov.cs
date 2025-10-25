@@ -16,13 +16,14 @@ public class PlayerMov : MonoBehaviour
 
     private float jumpTimeCounter;
     private bool isJumping;
-    private bool isGrounded;
     
     [Header("Detección del suelo")]
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float checkRadius = 0.2f;
     [SerializeField] private LayerMask whatIsGround;
 
+    private bool isGrounded;
+    
     [Header("Posesión")]
     public float possessionDuration = 5f;
     private bool isPossessing = false;
@@ -41,9 +42,10 @@ public class PlayerMov : MonoBehaviour
     void Update()
     {
         if (isPossessing) return;
-
+        
         // --- Detección del suelo ---
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
+        
 
         // --- Movimiento lateral ---
         moveInput = Input.GetAxisRaw("Horizontal");
@@ -61,27 +63,19 @@ public class PlayerMov : MonoBehaviour
         {
             playerController.GetPlayerAnimations().ToggleRunAnimation(false);
         }
-
-        // --- Salto ---
+        //--Salto simple y confiable --
+        HandleJump();
+    }
+    
+    private void HandleJump()
+    {
+        // Si estamos en el suelo y presionamos espacio, saltamos
         if (isGrounded && Input.GetKeyDown(KeyCode.Space))
         {
-            isJumping = true;
-            jumpTimeCounter = maxJumpTime;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }
-
-        if (Input.GetKey(KeyCode.Space) && isJumping)
-        {
-            if (jumpTimeCounter > 0)
-            {
-                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce * jumpMultiplier);
-                jumpTimeCounter -= Time.deltaTime;
-            }
-            else isJumping = false;
-        }
-
-        if (Input.GetKeyUp(KeyCode.Space)) isJumping = false;
     }
+
 
     // --- Detección del suelo ---
     private void OnCollisionEnter2D(Collision2D collision)
