@@ -8,11 +8,24 @@ public class DeadZone : MonoBehaviour
     [SerializeField] private Light2D lightSource;
     [SerializeField] private int rays = 30;
     
-    private float _range = 5f; // hasta dónde llegan los rayos
-    private float _angle = 45f; // ángulo del cono de luz
-
     [Header("Debug")]
     [SerializeField] private bool showDebug = true;
+    
+    private float _range = 5f; // hasta dónde llegan los rayos
+    private float _angle = 45f; // ángulo del cono de luz
+    
+    private bool _isInvencible;
+    private float _timeLeft;
+
+    private void OnEnable()
+    {
+        PlayerPossessing.OnPossessEnd += Invincibility;
+    }
+
+    private void OnDisable()
+    {
+        PlayerPossessing.OnPossessEnd -= Invincibility;
+    }
 
     private void Start()
     {
@@ -22,6 +35,9 @@ public class DeadZone : MonoBehaviour
 
     private void Update()
     {
+        TimeLeft();
+        
+        if (_isInvencible) return;
         DetectPlayer();
     }
 
@@ -56,5 +72,18 @@ public class DeadZone : MonoBehaviour
         {
             Debug.DrawRay(transform.position, transform.right * _range, Color.red);
         }
+    }
+
+    private void Invincibility(float time)
+    {
+        _timeLeft = time;
+        _isInvencible = true;
+    }
+
+    private void TimeLeft()
+    {
+        _timeLeft -= Time.deltaTime;
+        if (_timeLeft <= 0)
+            _isInvencible = false;
     }
 }

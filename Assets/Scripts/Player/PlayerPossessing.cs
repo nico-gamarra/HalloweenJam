@@ -3,9 +3,13 @@ using UnityEngine;
 
 public class PlayerPossessing : MonoBehaviour
 {
-    [Header("Posesión")]
-    public float possessionDuration = 5f;
+    public static event Action<float> OnPossessEnd;
+    public static event Action OnPossessStart;
 
+    [Header("Config")]
+    [SerializeField] private PlayerController playerController;
+    [SerializeField] private float invincibilityDuration;
+    
     private bool _isPossessing;
 
     private void Awake()
@@ -24,8 +28,8 @@ public class PlayerPossessing : MonoBehaviour
 
         _isPossessing = true;
 
-        // Desactivar fantasma
-        gameObject.SetActive(false);
+        playerController.GetPlayerAnimations().PossessAnimation();
+        OnPossessStart?.Invoke();
     }
 
     public void EndPossession(Vector3 newPosition)
@@ -33,5 +37,6 @@ public class PlayerPossessing : MonoBehaviour
         // Reactivar al fantasma
         _isPossessing = false;
         transform.position = newPosition;
+        OnPossessEnd?.Invoke(invincibilityDuration);
     }
 }
