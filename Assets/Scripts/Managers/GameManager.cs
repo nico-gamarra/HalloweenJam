@@ -6,12 +6,12 @@ public class GameManager : MonoBehaviour
 {
     private void OnEnable()
     {
-        PlayerController.OnPlayerDeath += RestartLevel;
+        DeathEvent.OnPlayerDeath += RestartLevel;
     }
 
     private void OnDisable()
     {
-        PlayerController.OnPlayerDeath -= RestartLevel;
+        DeathEvent.OnPlayerDeath -= RestartLevel;
     }
 
     public static GameManager instance;
