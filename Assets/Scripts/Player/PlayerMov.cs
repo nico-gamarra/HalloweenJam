@@ -16,7 +16,7 @@ public class PlayerMov : MonoBehaviour
     private float _moveInput;
     private bool _canMove;
     private Rigidbody2D _rb;
-    private SpriteRenderer _spriteRenderer;
+    private Vector3 _playerScale;
 
     private void Awake()
     {
@@ -35,7 +35,7 @@ public class PlayerMov : MonoBehaviour
     void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
-        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        _playerScale = transform.localScale;
         _canMove = true;
     }
 
@@ -69,12 +69,14 @@ public class PlayerMov : MonoBehaviour
     {
         if (_moveInput > 0)
         {
-            _spriteRenderer.flipX = false;
+            transform.localScale = new Vector3(_playerScale.x, _playerScale.y, 1);
+            
             playerController.GetPlayerAnimations().ToggleRunAnimation(true);
         }
         else if (_moveInput < 0)
         {
-            _spriteRenderer.flipX = true;
+            transform.localScale = new Vector3(_playerScale.x * -1, _playerScale.y, 1);
+            
             playerController.GetPlayerAnimations().ToggleRunAnimation(true);
         }
         else
