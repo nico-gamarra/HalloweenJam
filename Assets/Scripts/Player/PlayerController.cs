@@ -7,14 +7,16 @@ public class PlayerController : MonoBehaviour
     
     [SerializeField] private PlayerAnimations playerAnimations;
     
-    private void OnEnable()
+    private void Awake()
     {
         PossessEvent.OnPossess += DeactivatePlayer;
+        DeathEvent.OnPlayerDeath += DeactivatePlayer;
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         PossessEvent.OnPossess -= DeactivatePlayer;
+        DeathEvent.OnPlayerDeath -= DeactivatePlayer;
     }
     
     public void IsDead()
