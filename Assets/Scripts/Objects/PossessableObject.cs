@@ -11,7 +11,10 @@ public class PossessableObject : MonoBehaviour
     [SerializeField] private float possessDuration;
     [SerializeField] private float onEndPossessingCooldown;
     [SerializeField] private float onStartPossessingCooldown;
-    
+
+    [Header("Visual")]
+    [SerializeField] private GameObject eyesSprite; // 👁 referencia al sprite de ojos
+
     private bool _isPossessed;
     private float _possessionTimer;
     private float _cooldownTimer;
@@ -29,15 +32,22 @@ public class PossessableObject : MonoBehaviour
     {
         _rb = GetComponentInParent<Rigidbody2D>();
         _sr = GetComponentInParent<SpriteRenderer>();
+
+        // Si no se asignó manualmente, intentar buscar un hijo llamado "Eyes"
+        if (eyesSprite == null)
+        {
+            Transform eyes = transform.parent.Find("Eyes");
+            if (eyes != null) eyesSprite = eyes.gameObject;
+        }
+
+        if (eyesSprite != null) eyesSprite.SetActive(false); // aseguramos que empiece apagado
     }
 
     void Update()
     {
-        
         if (_isPossessed)
         {
             HandleObjectMovement();
-            
             possestimer2 = PossessTimer();
             
             if (possestimer2 <= 0f)
@@ -81,10 +91,22 @@ public class PossessableObject : MonoBehaviour
         _possessionTimer -= Time.deltaTime;
         return _possessionTimer;
     }
+
     private void Possess()
     {
         StartPossession(possessDuration);
         OnPossess?.Invoke();
+
+        if (eyesSprite != null)
+            StartCoroutine(ShowEyesWithDelay(0.6f));
+    }
+    
+    private IEnumerator ShowEyesWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        if (_isPossessed && eyesSprite != null)
+            eyesSprite.SetActive(true);
     }
 
     private void StartPossession(float duration)
@@ -109,9 +131,11 @@ public class PossessableObject : MonoBehaviour
         
         _player.gameObject.SetActive(true);
         _player.GetComponent<PlayerPossessing>().EndPossession(transform.position);
+
+        // 👁 Ocultar los ojos al terminar la posesión
+        if (eyesSprite != null) eyesSprite.SetActive(false);
     }
 
-    // --- Detección del jugador ---
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
