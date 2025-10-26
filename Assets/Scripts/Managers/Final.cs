@@ -7,5 +7,6 @@ public class Final : MonoBehaviour
     {
         PlayerController player = other.gameObject.GetComponent<PlayerController>();
         player.GetPlayerAnimations().FinalAnimation();
+        GameManager.instance.GetAudioManager().PlayAudioWithFade(AudioManager.MusicList.Endgame);
     }
 }

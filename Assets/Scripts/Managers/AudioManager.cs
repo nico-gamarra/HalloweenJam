@@ -17,7 +17,8 @@ public class AudioManager : MonoBehaviour
     public enum MusicList
     {
         Menu,
-        Game
+        Game,
+        Endgame
     }
 
     [SerializeField] private float fadeDuration;
@@ -54,6 +55,38 @@ public class AudioManager : MonoBehaviour
     {
         _actualMusic = songName;
         StartCoroutine(FadeMusic(musicList[(int)songName]));
+    }
+    
+    public void PlayAudioWithFade(MusicList songName, float pitch = 1.0f)
+    {
+        _actualMusic = songName;
+        StartCoroutine(FadeAudio(musicList[(int)songName]));
+    }
+    
+    private IEnumerator FadeAudio(AudioClip newClip)
+    {
+        float startVolume = musicSource.volume;
+
+        // Fade out
+        while (musicSource.volume > 0)
+        {
+            musicSource.volume -= startVolume * Time.deltaTime / fadeDuration;
+            yield return null;
+        }
+
+        musicSource.Stop();
+        musicSource.clip = newClip;
+        musicSource.loop = false;
+        musicSource.Play();
+
+        // Fade in
+        while (musicSource.volume < startVolume)
+        {
+            musicSource.volume += startVolume * Time.deltaTime / fadeDuration;
+            yield return null;
+        }
+
+        musicSource.volume = startVolume; // Asegurar que termine en el volumen exacto
     }
     
     private IEnumerator FadeMusic(AudioClip newClip)
