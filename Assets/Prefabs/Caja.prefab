@@ -412,6 +412,7 @@ MonoBehaviour:
   possessDuration: 3
   onEndPossessingCooldown: 1.5
   onStartPossessingCooldown: 1
+  isMovable: 1
   eyesSprite: {fileID: 7727932870175768260}
   buttonKey: {fileID: 2300859116439479548}
 --- !u!1 &7727932870175768260

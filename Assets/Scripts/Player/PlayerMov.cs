@@ -20,6 +20,8 @@ public class PlayerMov : MonoBehaviour
 
     private void Awake()
     {
+        _rb = GetComponent<Rigidbody2D>();
+        
         PlayerController.OnPlayerDeath += DisableMovement;
         PlayerPossessing.OnPossessStart += DisableMovement;
         PlayerPossessing.OnPossessEnd += ActivateMovement;
@@ -28,13 +30,12 @@ public class PlayerMov : MonoBehaviour
     private void OnDestroy()
     {
         PlayerController.OnPlayerDeath -= DisableMovement;
-        PlayerPossessing.OnPossessStart += DisableMovement;
+        PlayerPossessing.OnPossessStart -= DisableMovement;
         PlayerPossessing.OnPossessEnd -= ActivateMovement;
     }
 
     void Start()
     {
-        _rb = GetComponent<Rigidbody2D>();
         _playerScale = transform.localScale;
         _canMove = true;
     }

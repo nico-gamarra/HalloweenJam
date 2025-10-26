@@ -11,6 +11,7 @@ public class PossessableObject : MonoBehaviour
     [SerializeField] private float possessDuration;
     [SerializeField] private float onEndPossessingCooldown;
     [SerializeField] private float onStartPossessingCooldown;
+    [SerializeField] private bool isMovable;
 
     [Header("Visual")]
     [SerializeField] private GameObject eyesSprite; // 👁 referencia al sprite de ojos
@@ -48,7 +49,8 @@ public class PossessableObject : MonoBehaviour
     {
         if (_isPossessed)
         {
-            HandleObjectMovement();
+            if (isMovable)
+                HandleObjectMovement();
             possestimer2 = PossessTimer();
             
             if (possestimer2 <= 0f)
@@ -128,7 +130,8 @@ public class PossessableObject : MonoBehaviour
         
         _cooldownTimer = onEndPossessingCooldown;
         _isPossessed = false;
-        _rb.linearVelocity = Vector2.zero;
+        if (isMovable)
+            _rb.linearVelocity = Vector2.zero;
         
         _player.gameObject.SetActive(true);
         _player.GetComponent<PlayerPossessing>().EndPossession(transform.position);
