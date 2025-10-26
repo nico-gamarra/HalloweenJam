@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     
+    [SerializeField] private Animator animator;
+    
     private AudioManager _audioManager;
     
     private void OnEnable()
@@ -37,6 +39,16 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
+    public void FadeInAnimation()
+    {
+        animator.Play("FadeIn");
+    }
     
+    public void FadeOutAnimation()
+    {
+        animator.Play("FadeOut");
+    }
+
     public AudioManager GetAudioManager() => _audioManager;
 }

@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
         PossessEvent.OnPossess += DeactivatePlayer;
         DeathEvent.OnPlayerDeath += DeactivatePlayer;
         FinalEvent.OnFinal += InstantiateCat;
+        
+        GameManager.instance.FadeInAnimation();
     }
 
     private void OnDestroy()
