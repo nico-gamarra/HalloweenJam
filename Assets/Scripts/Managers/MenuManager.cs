@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,8 +20,16 @@ public class MainMenu : MonoBehaviour
     // --- Botón JUGAR ---
     public void PlayGame()
     {
+        StartCoroutine(Fade());
+        GameManager.instance.GetAudioManager().PlayMusicWithFade(AudioManager.MusicList.Game);
+    }
+
+    private IEnumerator Fade()
+    {
+        GameManager.instance.FadeOutAnimation();
         SceneManager.LoadScene(gameSceneName);
-        GameManager.instance.GetAudioManager().PlayMusic(AudioManager.MusicList.Game);
+        yield return new WaitForSeconds(1f);
+        GameManager.instance.FadeInAnimation();
     }
 
     // --- Botón CRÉDITOS ---
