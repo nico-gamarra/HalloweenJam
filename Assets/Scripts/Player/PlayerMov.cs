@@ -58,6 +58,7 @@ public class PlayerMov : MonoBehaviour
     private void DisableMovement()
     {
         _canMove = false;
+        _rb.linearVelocity = Vector2.zero;
     }
 
     private void ActivateMovement(float _)

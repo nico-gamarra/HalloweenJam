@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: e7c41376421fa954eb151d2c9c11c7f1
+guid: 8271798f0a1f68b41b2ce7be3116b3a1
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6731379151466030879
-    second: Cosita_de_las_velas_0
+      213: -6225341612825223876
+    second: Cuadro04_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Cosita_de_las_velas_0
+      name: Cuadro04_0
       rect:
         serializedVersion: 2
-        x: 19
-        y: 16
-        width: 213
-        height: 754
+        x: 81
+        y: 75
+        width: 436
+        height: 554
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f176a938ca9aa6d50800000000000000
-      internalID: 6731379151466030879
+      spriteID: c3d581259c42b99a0800000000000000
+      internalID: -6225341612825223876
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Cosita_de_las_velas_0: 6731379151466030879
+      Cuadro04_0: -6225341612825223876
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
