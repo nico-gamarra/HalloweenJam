@@ -11,6 +11,8 @@ public class PossessableObject : MonoBehaviour
     [SerializeField] private float possessDuration;
     [SerializeField] private float onEndPossessingCooldown;
     [SerializeField] private float onStartPossessingCooldown;
+
+    [SerializeField] private GameObject buttonKey;
     
     private bool _isPossessed;
     private float _possessionTimer;
@@ -118,6 +120,7 @@ public class PossessableObject : MonoBehaviour
         {
             _playerInRange = true;
             _player = collision.gameObject;
+            buttonKey.SetActive(true);
         }
     }
 
@@ -126,6 +129,7 @@ public class PossessableObject : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             _playerInRange = false;
+            buttonKey.SetActive(false);
         }
     }
 }
