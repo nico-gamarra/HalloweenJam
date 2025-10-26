@@ -6,17 +6,20 @@ public class PlayerController : MonoBehaviour
     public static event Action OnPlayerDeath;
     
     [SerializeField] private PlayerAnimations playerAnimations;
+    [SerializeField] private GameObject cat;
     
     private void Awake()
     {
         PossessEvent.OnPossess += DeactivatePlayer;
         DeathEvent.OnPlayerDeath += DeactivatePlayer;
+        FinalEvent.OnFinal += InstantiateCat;
     }
 
     private void OnDestroy()
     {
         PossessEvent.OnPossess -= DeactivatePlayer;
         DeathEvent.OnPlayerDeath -= DeactivatePlayer;
+        FinalEvent.OnFinal -= InstantiateCat;
     }
     
     public void IsDead()
@@ -30,6 +33,11 @@ public class PlayerController : MonoBehaviour
     private void DeactivatePlayer()
     {
         gameObject.SetActive(false);
+    }
+
+    private void InstantiateCat()
+    {
+        Instantiate(cat, transform.position, Quaternion.identity);
     }
 
     public PlayerAnimations GetPlayerAnimations() => playerAnimations;

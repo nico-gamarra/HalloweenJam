@@ -24,6 +24,7 @@ public class PlayerMov : MonoBehaviour
         
         PlayerController.OnPlayerDeath += DisableMovement;
         PlayerPossessing.OnPossessStart += DisableMovement;
+        PlayerAnimations.OnFinal += DisableMovement;
         PlayerPossessing.OnPossessEnd += ActivateMovement;
     }
 
@@ -31,6 +32,7 @@ public class PlayerMov : MonoBehaviour
     {
         PlayerController.OnPlayerDeath -= DisableMovement;
         PlayerPossessing.OnPossessStart -= DisableMovement;
+        PlayerAnimations.OnFinal -= DisableMovement;
         PlayerPossessing.OnPossessEnd -= ActivateMovement;
     }
 

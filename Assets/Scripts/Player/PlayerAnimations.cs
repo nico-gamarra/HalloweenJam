@@ -1,7 +1,10 @@
+using System;
 using UnityEngine;
 
 public class PlayerAnimations : MonoBehaviour
 {
+    public static event Action OnFinal;
+    
     [SerializeField] private Animator animator;
 
     public void ToggleRunAnimation(bool value)
@@ -17,5 +20,11 @@ public class PlayerAnimations : MonoBehaviour
     public void PossessAnimation()
     {
         animator.SetTrigger("Possess");
+    }
+
+    public void FinalAnimation()
+    {
+        animator.SetTrigger("Final");
+        OnFinal?.Invoke();
     }
 }
