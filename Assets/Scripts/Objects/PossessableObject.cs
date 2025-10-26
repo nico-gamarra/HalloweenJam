@@ -9,15 +9,21 @@ public class PossessableObject : MonoBehaviour
     [Header("Config")]
     [SerializeField] private float moveSpeed = 3f;
     [SerializeField] private float possessDuration;
+    [SerializeField] private float onEndPossessingCooldown;
+    [SerializeField] private float onStartPossessingCooldown;
     
     private bool _isPossessed;
     private float _possessionTimer;
+    private float _cooldownTimer;
     
     private bool _playerInRange;
     private GameObject _player;
     
     private Rigidbody2D _rb;
     private SpriteRenderer _sr;
+
+    private float possestimer2;
+    private float cooldowntimer2;
 
     private void Awake()
     {
@@ -27,20 +33,38 @@ public class PossessableObject : MonoBehaviour
 
     void Update()
     {
-        if (_playerInRange && !_isPossessed && Input.GetKeyDown(KeyCode.E))
-        {
-            Possess();
-        }
-
+        
         if (_isPossessed)
         {
-            if (PossessTimer() <= 0)
+            HandleObjectMovement();
+            
+            possestimer2 = PossessTimer();
+            
+            if (possestimer2 <= 0f)
             {
                 StartCoroutine(ReturnControl());
             }
-            else
-                HandleObjectMovement();
+            else if (possestimer2 <= possessDuration - onStartPossessingCooldown && Input.GetKeyDown(KeyCode.E))
+            {
+                StartCoroutine(ReturnControl());
+            }
         }
+
+        if (!_isPossessed)
+        {
+            if (_playerInRange && cooldowntimer2 <= 0 && Input.GetKeyDown(KeyCode.E))
+            {
+                Possess();
+            }
+            
+            cooldowntimer2 = UpdateCooldownTimer();
+        }
+    }
+
+    private float UpdateCooldownTimer()
+    {
+        _cooldownTimer -= Time.deltaTime;
+        return _cooldownTimer;
     }
 
     private void HandleObjectMovement()
@@ -59,15 +83,14 @@ public class PossessableObject : MonoBehaviour
     }
     private void Possess()
     {
-        _rb.bodyType = RigidbodyType2D.Dynamic;//Cambiar por lol de la masa
         StartPossession(possessDuration);
         OnPossess?.Invoke();
     }
 
     private void StartPossession(float duration)
     {
-        _isPossessed = true;
         _possessionTimer = duration;
+        _isPossessed = true;
     }
 
     private IEnumerator ReturnControl()
@@ -79,7 +102,8 @@ public class PossessableObject : MonoBehaviour
     private void EndPossession()
     {
         if (!_isPossessed) return;
-
+        
+        _cooldownTimer = onEndPossessingCooldown;
         _isPossessed = false;
         _rb.linearVelocity = Vector2.zero;
         
