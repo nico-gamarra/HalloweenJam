@@ -4,6 +4,10 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
+    
+    private AudioManager _audioManager;
+    
     private void OnEnable()
     {
         DeathEvent.OnPlayerDeath += RestartLevel;
@@ -13,8 +17,6 @@ public class GameManager : MonoBehaviour
     {
         DeathEvent.OnPlayerDeath -= RestartLevel;
     }
-
-    public static GameManager instance;
     
     private void Awake()
     {
@@ -27,10 +29,14 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        
+        _audioManager = GetComponent<AudioManager>();
     }
 
     private void RestartLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+    
+    public AudioManager GetAudioManager() => _audioManager;
 }

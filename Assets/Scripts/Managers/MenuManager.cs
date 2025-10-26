@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,12 +9,18 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private GameObject creditsPanel;
 
     [Header("Nombre de la escena del juego")]
-    [SerializeField] private string gameSceneName = "Level1"; // Cambiá por tu escena
+    [SerializeField] private string gameSceneName = "Level_1";
+
+    private void Start()
+    {
+        GameManager.instance.GetAudioManager().PlayMusic(AudioManager.MusicList.Menu);
+    }
 
     // --- Botón JUGAR ---
     public void PlayGame()
     {
         SceneManager.LoadScene(gameSceneName);
+        GameManager.instance.GetAudioManager().PlayMusic(AudioManager.MusicList.Game);
     }
 
     // --- Botón CRÉDITOS ---

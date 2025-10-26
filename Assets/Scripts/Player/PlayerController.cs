@@ -22,6 +22,8 @@ public class PlayerController : MonoBehaviour
     public void IsDead()
     {
         playerAnimations.DeathAnimation();
+        GameManager.instance.GetAudioManager().PlayAudio(AudioManager.AudioList.Fire);
+        GameManager.instance.GetAudioManager().PlayAudio(AudioManager.AudioList.Death);
         OnPlayerDeath?.Invoke();
     }
 
