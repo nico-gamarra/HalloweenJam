@@ -14,6 +14,7 @@ public class PossessableObject : MonoBehaviour
 
     [Header("Visual")]
     [SerializeField] private GameObject eyesSprite; // 👁 referencia al sprite de ojos
+    [SerializeField] private GameObject buttonKey;
 
     private bool _isPossessed;
     private float _possessionTimer;
@@ -142,6 +143,7 @@ public class PossessableObject : MonoBehaviour
         {
             _playerInRange = true;
             _player = collision.gameObject;
+            buttonKey.gameObject.SetActive(true);
         }
     }
 
@@ -150,6 +152,7 @@ public class PossessableObject : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             _playerInRange = false;
+            buttonKey.gameObject.SetActive(false);
         }
     }
 }

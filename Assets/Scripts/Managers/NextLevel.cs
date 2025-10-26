@@ -6,7 +6,7 @@ public class NextLevel : MonoBehaviour
 {
     [SerializeField] private string nextLevelName;
     
-    private void OnTriggerExit2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         SceneManager.LoadScene(nextLevelName);
     }

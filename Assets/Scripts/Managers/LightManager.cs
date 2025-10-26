@@ -4,21 +4,21 @@ public class LightManager : MonoBehaviour
 {
     [SerializeField] private GameObject[] flashingLights;
     [SerializeField] private float lightSwitchInterval;
-    private float lightCooldown;
+    private float _lightCooldown;
 
     void Update()
     {
-        lightCooldown -= Time.deltaTime;
+        _lightCooldown -= Time.deltaTime;
 
-        if (lightCooldown < 0) { 
-            foreach (GameObject light in flashingLights)
+        if (_lightCooldown < 0) { 
+            foreach (GameObject lightSource in flashingLights)
             {
-                for (int i = 0; i < light.transform.childCount; i++)
+                for (int i = 0; i < lightSource.transform.childCount; i++)
                 {
-                    light.transform.GetChild(i).gameObject.SetActive(!light.transform.GetChild(i).gameObject.active);
+                    lightSource.transform.GetChild(i).gameObject.SetActive(!lightSource.transform.GetChild(i).gameObject.activeSelf);
                 }
             }
-            lightCooldown = lightSwitchInterval;
+            _lightCooldown = lightSwitchInterval;
         }
     }
 }
