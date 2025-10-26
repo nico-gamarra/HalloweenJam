@@ -141,10 +141,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 6165914cd7a596a48bed94690a0db3a7, type: 3}
   - {fileID: 8300000, guid: 2ced516f2a728b5439185cb183f7d1ca, type: 3}
   - {fileID: 8300000, guid: ed7ae4ceaf189944bb772170c736e057, type: 3}
-  - {fileID: 8300000, guid: 07ada98d40a94a24585f6848455d43e8, type: 3}
   musicList:
   - {fileID: 8300000, guid: 9288935ba0f346343911b56e31cfd95a, type: 3}
   - {fileID: 8300000, guid: fbbbe9ca5ff36424cad8fdecad32dddb, type: 3}
+  - {fileID: 8300000, guid: 07ada98d40a94a24585f6848455d43e8, type: 3}
   sfxSource: {fileID: 5243475031713653885}
   musicSource: {fileID: 6026677412745019031}
   mainMixer: {fileID: 24100000, guid: 6bbd598a8ac663c48887e35d0da80f2d, type: 2}
