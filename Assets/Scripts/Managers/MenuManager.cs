@@ -15,6 +15,7 @@ public class MainMenu : MonoBehaviour
     private void Start()
     {
         GameManager.instance.GetAudioManager().PlayMusic(AudioManager.MusicList.Menu);
+        GameManager.instance.FadeInAnimation();
     }
 
     // --- Botón JUGAR ---
